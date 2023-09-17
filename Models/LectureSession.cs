@@ -5,11 +5,18 @@ namespace GroupTracker.Models;
 public class LectureSession
 {
     public int Id { get; set; }
+
+
     public string Day { get; set; }
     public string Time { get; set; }
 
-
     public string Auditorium { get; set; }
 
+
+    public bool IsOnline { get; set; }
+    public bool IsAlternate { get; set; }
+
     public ICollection<GroupLectureSession> GroupLectureSessions { get; set; }
+    public ICollection<AlternateWeek> AlternateWeeks { get; set; } = new List<AlternateWeek>();
+
 }

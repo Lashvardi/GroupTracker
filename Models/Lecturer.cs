@@ -18,7 +18,6 @@ public class Lecturer
     public string Password { get; set; }
 
 
-
     // Navigation Properties
-    public ICollection<LecturerGroup> Groups { get; set; }
+    public ICollection<LecturerGroup> LecturerGroup { get; set; }
 }
