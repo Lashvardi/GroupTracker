@@ -27,7 +27,8 @@ public class LecturerService : ILecturerService
             FirstName = input.FirstName,
             LastName = input.LastName,
             Email = input.Email,
-            Password = _hasher.HashPassword(input, input.Password)
+            Password = _hasher.HashPassword(input, input.Password),
+            Companies = input.Companies
         };
 
         await _context.Lecturers.AddAsync(lecturer);

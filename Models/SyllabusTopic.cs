@@ -1,7 +1,7 @@
 ﻿using GroupTracker.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace GroupTracker.Modelsl;
+namespace GroupTracker.Models;
 
 public class SyllabusTopic
 {

@@ -4,8 +4,9 @@
 public class AlternateWeek
 {
     public int Id { get; set; }
-    public int WeekNumber { get; set; }
+    public string WeekNumber { get; set; }
     public int LectureSessionId { get; set; }
 
+    // Navigation Properties
     public LectureSession LectureSession { get; set; }
 }

@@ -10,7 +10,7 @@ public class DataContext : DbContext
     }
 
     public DbSet<Lecturer> Lecturers { get; set;}
-    public DbSet<LecturerGroup> Groups { get; set; }
+    public DbSet<LecturerGroup> LecturerGroups { get; set; }
     public DbSet<LectureSession> LectureSessions { get; set; }
     public DbSet<GroupLectureSession> GroupLectureSessions { get; set; }
     public DbSet<SyllabusTopic> SyllabusTopics { get; set; }

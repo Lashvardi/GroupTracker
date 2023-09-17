@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using GroupTracker.Services.Abstraction;
 using GroupTracker.Services.Implementation;
 using GroupTracker.DTOs.Lecturer;
+using GroupTracker.Services.Abstraction.Group;
+using GroupTracker.Services.Implementation.Group;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -32,6 +34,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<Microsoft.AspNetCore.Identity.PasswordHasher<LecturerRegistrationInput>>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILecturerService, LecturerService>();
+
+builder.Services.AddScoped<ILecturerGroupCoordinator, LecturerGroupCoordinator>();
+builder.Services.AddScoped<ILectureSessionService, LecturerSessionService>();
+builder.Services.AddScoped<IAlternateWeekService, AlternateWeekService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -13,4 +13,7 @@ public class LecturerRegistrationInput
 
     [Required]
     public string Password { get; set; }
+
+    // comma separated list of companies (e.g. "Google, Microsoft, Apple")
+    public string Companies { get; set; }
 }
