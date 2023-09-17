@@ -75,4 +75,30 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
 
         return group;
     }
+
+    public async Task<LecturerGroup> ChangeGroupTopic(int groupId, int topicId)
+    {
+        var group = await _context.LecturerGroups
+                    .Include(x => x.GroupLectureSessions)
+                    .ThenInclude(x => x.LectureSession)
+                    .FirstOrDefaultAsync(x => x.Id == groupId);
+
+        if (group == null)
+        {
+            throw new Exception("Group not found");
+        }
+
+        var topic = await _context.SyllabusTopics.FirstOrDefaultAsync(x => x.Id == topicId);
+
+        if (topic == null)
+        {
+            throw new Exception("Topic not found");
+        }
+
+        group.CurrentSyllabusTopic = topic;
+        group.CurrentSyllabusTopicId = topic.Id;
+        await _context.SaveChangesAsync();
+
+        return group;
+    }
 }

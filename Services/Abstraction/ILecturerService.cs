@@ -10,4 +10,5 @@ public interface ILecturerService
 
 
     Task<LecturerDTO> GetLecturerInfoAsync(int lecturerId);
+
 }

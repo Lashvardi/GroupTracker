@@ -6,4 +6,6 @@ public interface ISyllabusTopicService
 {
     Task<List<SyllabusTopic>> GetSyllabusTopicsByGroupIdAsync(int groupId);
     Task<SyllabusTopic> CreateSyllabusTopicAsync(SyllabusTopic newTopic);
+
+    Task<SyllabusTopic> GetSyllabusTopicByIdAsync(int syllabusTopicId);
 }

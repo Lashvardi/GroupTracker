@@ -9,6 +9,7 @@ public class LecturerGroupDTO
     public string GroupName { get; set; }
     public string Grade { get; set; }
     public string TopicName { get; set; }
+    public int? TopicId { get; set; }
     public GroupStatus Status { get; set; }
 
     public ICollection<GroupLectureSessionDTO> Sessions { get; set; }

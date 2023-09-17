@@ -22,7 +22,7 @@ public class GroupService : IGroupService
         {
             CompanyName = completeGroupInput.Group.CompanyName,
             GroupName = completeGroupInput.Group.GroupName,
-            Grade = completeGroupInput.Group.Grade
+            Grade = completeGroupInput.Group.Grade,
         };
         await _context.LecturerGroups.AddAsync(newGroup);
         return newGroup;

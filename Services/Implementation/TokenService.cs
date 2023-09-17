@@ -23,7 +23,8 @@ namespace GroupTracker.Services.Implementation
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, lecturer.Id.ToString()),
-                new Claim(ClaimTypes.Email, lecturer.Email)
+                new Claim(ClaimTypes.Email, lecturer.Email),
+                new Claim(ClaimTypes.Name, lecturer.FirstName + " " + lecturer.LastName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));

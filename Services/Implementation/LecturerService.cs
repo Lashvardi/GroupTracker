@@ -88,6 +88,7 @@ public class LecturerService : ILecturerService
                 GroupName = lg.GroupName,
                 Grade = lg.Grade,
                 TopicName = lg.CurrentSyllabusTopic?.Title,
+                TopicId = lg.CurrentSyllabusTopic?.Id,
                 Status = lg.Status,
                 Sessions = lg.GroupLectureSessions.Select(gls => new GroupLectureSessionDTO
                 {

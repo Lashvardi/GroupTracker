@@ -1,13 +1,6 @@
 using GroupTracker.data;
-using Pomelo;
 using Microsoft.EntityFrameworkCore;
-using GroupTracker.Services.Abstraction;
-using GroupTracker.Services.Implementation;
-using GroupTracker.DTOs.Lecturer;
-using GroupTracker.Services.Abstraction.Group;
-using GroupTracker.Services.Implementation.Group;
-using GroupTracker.Services.Abstraction.Syllabus;
-using GroupTracker.Services.Implementation.Syllabus;
+using GroupTracker.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -29,19 +22,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 
 
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<Microsoft.AspNetCore.Identity.PasswordHasher<LecturerRegistrationInput>>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ILecturerService, LecturerService>();
 
-builder.Services.AddScoped<ILecturerGroupCoordinator, LecturerGroupCoordinator>();
-builder.Services.AddScoped<ILectureSessionService, LecturerSessionService>();
-builder.Services.AddScoped<IAlternateWeekService, AlternateWeekService>();
-builder.Services.AddScoped<IGroupService, GroupService>();
-builder.Services.AddScoped<ISyllabusTopicService, SyllabusTopicService>();
+// Add services to the container.
+ServiceConfiguration.ConfigureServices(builder.Services);
+
 
 var app = builder.Build();
 

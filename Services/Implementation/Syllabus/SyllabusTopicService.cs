@@ -36,6 +36,11 @@ public class SyllabusTopicService : ISyllabusTopicService
                                       .Select(st => st.Order)
                                       .FirstOrDefaultAsync();
 
+        if (newTopic.LecturerGroupId == 0)
+        {
+            throw new Exception("Invalid group id");
+        }
+
 
         newTopic.Order = lastOrder + 1;
 
@@ -44,5 +49,18 @@ public class SyllabusTopicService : ISyllabusTopicService
 
         return newTopic;
     }
+
+    public async Task<SyllabusTopic> GetSyllabusTopicByIdAsync(int topicId)
+    {
+        if (topicId == 0)
+        {
+            throw new Exception("Invalid topic id");
+        }
+
+        return await _context.SyllabusTopics
+                             .FirstOrDefaultAsync(st => st.Id == topicId);
+    }
+
+
 
 }

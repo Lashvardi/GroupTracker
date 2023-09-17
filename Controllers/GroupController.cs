@@ -44,5 +44,19 @@ namespace GroupTracker.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("change-topic")]
+        public async Task<IActionResult> ChangeGroupTopic(int groupId, int topicId)
+        {
+            try
+            {
+                var changedGroup = await _lecturerGroupCoordinator.ChangeGroupTopic(groupId, topicId);
+                return Ok(changedGroup);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

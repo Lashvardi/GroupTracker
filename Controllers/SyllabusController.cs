@@ -45,6 +45,18 @@ namespace GroupTracker.Controllers
             }
         }
 
-
+        [HttpGet("get-by-id")]
+        public async Task<IActionResult> GetSyllabusTopicById(int syllabusTopicId)
+        {
+            try
+            {
+                var result = await _syllabusService.GetSyllabusTopicByIdAsync(syllabusTopicId);
+                return result != null ? Ok(result) : BadRequest(new { message = "oops something went wrong ..." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 }
