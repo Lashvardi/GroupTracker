@@ -1,4 +1,5 @@
 ﻿using GroupTracker.data;
+using GroupTracker.DTOs.Groups;
 using GroupTracker.DTOs.Lecturer;
 using GroupTracker.Models;
 using GroupTracker.Services.Abstraction;
@@ -70,7 +71,9 @@ public class LecturerService : ILecturerService
                    .ThenInclude(lg => lg.CurrentSyllabusTopic)
                .FirstOrDefaultAsync(l => l.Id == lecturerId);
 
+
         if (lecturer == null) return null;
+
 
         var Fullname = $"{lecturer.FirstName} {lecturer.LastName}";
         var lecturerDto = new LecturerDTO
@@ -78,13 +81,14 @@ public class LecturerService : ILecturerService
             Email = lecturer.Email,
             FullName = Fullname,
             Companies = string.Join(", ", lecturer.LecturerGroups.Select(lg => lg.CompanyName).Distinct()),
+            GroupCount = lecturer.LecturerGroups.Count,
             Groups = lecturer.LecturerGroups.Select(lg => new LecturerGroupDTO
             {
                 CompanyName = lg.CompanyName,
                 GroupName = lg.GroupName,
                 Grade = lg.Grade,
-                GroupCount = lg.GroupLectureSessions.Count,
                 TopicName = lg.CurrentSyllabusTopic?.Title,
+                Status = lg.Status,
                 Sessions = lg.GroupLectureSessions.Select(gls => new GroupLectureSessionDTO
                 {
                     SessionDate = gls.LectureSession.Day,
@@ -92,6 +96,11 @@ public class LecturerService : ILecturerService
                     IsOnline = gls.LectureSession.IsOnline,
                     IsAlternate = gls.LectureSession.IsAlternate,
                 }).ToList()
+            }).ToList(),
+            groupNameWithIds = lecturer.LecturerGroups.Select(lg => new GroupNameWithId
+            {
+                GroupName = lg.GroupName,
+                GroupId = lg.Id,
             }).ToList()
         };
 

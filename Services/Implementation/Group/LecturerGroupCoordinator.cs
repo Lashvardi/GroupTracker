@@ -57,4 +57,22 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
 
         return newGroup;
     }
+
+    public async Task<LecturerGroup> DeleteGroup(int groupId)
+    {
+        var group = await _context.LecturerGroups
+                    .Include(x => x.GroupLectureSessions)
+                    .ThenInclude(x => x.LectureSession)
+                    .FirstOrDefaultAsync(x => x.Id == groupId);
+
+        if (group == null)
+        {
+            throw new Exception("Group not found");
+        }
+
+        _context.LecturerGroups.Remove(group);
+        await _context.SaveChangesAsync();
+
+        return group;
+    }
 }

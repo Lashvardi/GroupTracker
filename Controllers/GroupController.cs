@@ -30,5 +30,19 @@ namespace GroupTracker.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteGroup(int groupId)
+        {
+            try
+            {
+                var deletedGroup = await _lecturerGroupCoordinator.DeleteGroup(groupId);
+                return Ok(deletedGroup);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

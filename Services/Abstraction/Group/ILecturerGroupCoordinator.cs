@@ -6,4 +6,5 @@ namespace GroupTracker.Services.Abstraction.Group;
 public interface ILecturerGroupCoordinator
 {
     Task<LecturerGroup> CreateAndAssignGroup(int lecturerId, CompleteGroupInput completeGroupInput);
+    Task<LecturerGroup> DeleteGroup(int groupId);
 }

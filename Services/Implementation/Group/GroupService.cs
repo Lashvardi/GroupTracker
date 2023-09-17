@@ -27,4 +27,6 @@ public class GroupService : IGroupService
         await _context.LecturerGroups.AddAsync(newGroup);
         return newGroup;
     }
+
+
 }
