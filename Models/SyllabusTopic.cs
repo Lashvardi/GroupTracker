@@ -1,5 +1,6 @@
 ﻿using GroupTracker.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace GroupTracker.Models;
 
@@ -17,5 +18,6 @@ public class SyllabusTopic
     public int Order { get; set; }
 
     public int LecturerGroupId { get; set; }
+    [JsonIgnore]
     public LecturerGroup LecturerGroup { get; set; }
 }

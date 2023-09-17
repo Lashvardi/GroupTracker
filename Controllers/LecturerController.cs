@@ -37,6 +37,20 @@ namespace GroupTracker.Controllers
             }
         }
 
+        [HttpGet("full-info")]
+        public async Task<IActionResult> GetLecturerInfoAsync(int lecturerId)
+        {
+            try
+            {
+                var result = await _lecturerService.GetLecturerInfoAsync(lecturerId);
+                return result != null ? Ok(result) : Unauthorized(new { message = "oops something went wrong ..." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
 
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace GroupTracker.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace GroupTracker.Models;
 
 // THIS IS FOR THE ALTERNATE LECTURE WEEKS FOR ME TO TRACK 
 public class AlternateWeek
@@ -8,5 +10,7 @@ public class AlternateWeek
     public int LectureSessionId { get; set; }
 
     // Navigation Properties
+
+    [JsonIgnore]
     public LectureSession LectureSession { get; set; }
 }

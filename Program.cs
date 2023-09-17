@@ -6,6 +6,8 @@ using GroupTracker.Services.Implementation;
 using GroupTracker.DTOs.Lecturer;
 using GroupTracker.Services.Abstraction.Group;
 using GroupTracker.Services.Implementation.Group;
+using GroupTracker.Services.Abstraction.Syllabus;
+using GroupTracker.Services.Implementation.Syllabus;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -39,6 +41,7 @@ builder.Services.AddScoped<ILecturerGroupCoordinator, LecturerGroupCoordinator>(
 builder.Services.AddScoped<ILectureSessionService, LecturerSessionService>();
 builder.Services.AddScoped<IAlternateWeekService, AlternateWeekService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<ISyllabusTopicService, SyllabusTopicService>();
 
 var app = builder.Build();
 

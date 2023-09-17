@@ -8,4 +8,6 @@ public interface ILecturerService
     Task<LecturerRegistrationResponse> RegisterLecturer(LecturerRegistrationInput lecturer);
     Task<string> LoginLecturer(string email, string password);
 
+
+    Task<LecturerDTO> GetLecturerInfoAsync(int lecturerId);
 }

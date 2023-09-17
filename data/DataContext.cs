@@ -15,4 +15,18 @@ public class DataContext : DbContext
     public DbSet<GroupLectureSession> GroupLectureSessions { get; set; }
     public DbSet<SyllabusTopic> SyllabusTopics { get; set; }
     public DbSet<AlternateWeek> AlternateWeeks { get; set; }
+
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+
+        modelBuilder.Entity<LecturerGroup>()
+            .HasOne(lg => lg.CurrentSyllabusTopic)
+            .WithMany()
+            .HasForeignKey(lg => lg.CurrentSyllabusTopicId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
