@@ -5,6 +5,8 @@ using GroupTracker.Services.Abstraction.Group;
 using GroupTracker.Services.Implementation.Group;
 using GroupTracker.Services.Abstraction.Syllabus;
 using GroupTracker.Services.Implementation.Syllabus;
+using GroupTracker.Services.Abstraction.FileStorage;
+using GroupTracker.Services.Implementation.FileStorage;
 
 namespace GroupTracker.Extensions
 {
@@ -20,6 +22,7 @@ namespace GroupTracker.Extensions
             services.AddScoped<IAlternateWeekService, AlternateWeekService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<ISyllabusTopicService, SyllabusTopicService>();
+            services.AddScoped<IFileStorageService, FileStorageService>();
         }
     }
 }
