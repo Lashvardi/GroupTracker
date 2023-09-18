@@ -20,4 +20,6 @@ public class SyllabusTopic
     public int LecturerGroupId { get; set; }
     [JsonIgnore]
     public LecturerGroup LecturerGroup { get; set; }
+
+    public ICollection<FileAttachment> FileAttachments { get; set; } = new List<FileAttachment>();
 }
