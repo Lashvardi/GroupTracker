@@ -31,7 +31,7 @@ namespace GroupTracker.Controllers
             }
         }
 
-        [HttpGet("get-for-group")]
+        [HttpGet("get-for-group/{groupId}")]
         public async Task<IActionResult> GetSyllabusTopicsForGroup(int groupId)
         {
             try
@@ -45,7 +45,7 @@ namespace GroupTracker.Controllers
             }
         }
 
-        [HttpGet("get-by-id")]
+        [HttpGet("get-by-id/{syllabusTopicId}")]
         public async Task<IActionResult> GetSyllabusTopicById(int syllabusTopicId)
         {
             try

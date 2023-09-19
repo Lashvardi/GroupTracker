@@ -19,9 +19,17 @@ namespace GroupTracker.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterLecturer(LecturerRegistrationInput lecturer)
         {
-            var result = await _lecturerService.RegisterLecturer(lecturer);
-            return result != null ? Ok(result) : BadRequest(new { message = "Registration failed" });
+            try
+            {
+                var result = await _lecturerService.RegisterLecturer(lecturer);
+                return result != null ? Ok(result) : BadRequest(new { message = "Registration failed" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginLecturer(string email, string password)

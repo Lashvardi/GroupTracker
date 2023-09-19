@@ -15,8 +15,8 @@ public class LecturerGroup
 
     // GRADE IS FOR STEP ONLY
     public string Grade { get; set; }
-
     public GroupStatus Status { get; set; } = GroupStatus.Active;
+    //public int LectionsAmount { get; set; } = 0;
 
 
 

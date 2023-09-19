@@ -32,6 +32,11 @@ public class LecturerService : ILecturerService
             Companies = input.Companies
         };
 
+        if (await _context.Lecturers.AnyAsync(x => x.Email == input.Email))
+        {
+            throw new Exception("Lecturer Is Already Registered");
+        }
+
         await _context.Lecturers.AddAsync(lecturer);
         await _context.SaveChangesAsync();
 
@@ -49,6 +54,11 @@ public class LecturerService : ILecturerService
         if (lecturer == null)
         {
             throw new Exception("Invalid email or password");
+        }
+
+        if(lecturer.IsVerified == false)
+        {
+            throw new Exception("Lecturer is not verified, Please Check Your Email");
         }
 
         var result = _hasher.VerifyHashedPassword(null, lecturer.Password, password);

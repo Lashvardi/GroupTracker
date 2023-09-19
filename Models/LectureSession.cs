@@ -14,7 +14,7 @@ public class LectureSession
 
 
     public bool IsOnline { get; set; } = false;
-    public bool IsAlternate { get; set; } = false; 
+    public bool IsAlternate { get; set; } = false;
 
     public ICollection<GroupLectureSession> GroupLectureSessions { get; set; }
     public ICollection<AlternateWeek> AlternateWeeks { get; set; } = new List<AlternateWeek>();
