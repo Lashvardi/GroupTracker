@@ -16,4 +16,8 @@ public class LecturerRegistrationInput
 
     // comma separated list of companies (e.g. "Google, Microsoft, Apple")
     public string Companies { get; set; }
+
+
+    // CSV of subjects (e.g. "Maths, English, Science")
+    public string Subjects { get; set; }
 }

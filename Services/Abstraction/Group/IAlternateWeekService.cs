@@ -5,5 +5,6 @@ namespace GroupTracker.Services.Abstraction.Group;
 
 public interface IAlternateWeekService
 {
-    Task<List<AlternateWeek>> CreateAlternateWeeks(List<AlternateWeekDTO> alternateWeekDTOs);
+    Task<List<AlternateWeek>> CreateAlternateWeeks(bool startFromFirstWeek, int totalWeeks);
+
 }

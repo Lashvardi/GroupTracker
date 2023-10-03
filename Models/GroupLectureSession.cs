@@ -14,6 +14,7 @@ public class GroupLectureSession
     [JsonIgnore]
     public LecturerGroup Group { get; set; }
 
+
     public int LectureSessionId { get; set; }
     [JsonIgnore]
     public LectureSession LectureSession { get; set; }

@@ -45,12 +45,54 @@ namespace GroupTracker.Controllers
             }
         }
 
+        [HttpPost("verify")]
+        public async Task<IActionResult> VerifyLecturer(string email, string token)
+        {
+            try
+            {
+                var result = await _lecturerService.VerifyLecturer(email, token);
+                return result != null ? Ok(result) : Unauthorized(new { message = "Invalid email or token" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
         [HttpGet("full-info")]
         public async Task<IActionResult> GetLecturerInfoAsync(int lecturerId)
         {
             try
             {
                 var result = await _lecturerService.GetLecturerInfoAsync(lecturerId);
+                return result != null ? Ok(result) : Unauthorized(new { message = "oops something went wrong ..." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("subjects/{lecturerId}")]
+        public async Task<IActionResult> GetLecturerSubjects(int lecturerId)
+        {
+            try
+            {
+                var result = await _lecturerService.GetLecturerSubjects(lecturerId);
+                return result != null ? Ok(result) : Unauthorized(new { message = "oops something went wrong ..." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("companies/{lecturerId}")]
+        public async Task<IActionResult> GetLecturerCompanies(int lecturerId)
+        {
+            try
+            {
+                var result = await _lecturerService.GetLecturerCompanies(lecturerId);
                 return result != null ? Ok(result) : Unauthorized(new { message = "oops something went wrong ..." });
             }
             catch (Exception ex)

@@ -5,13 +5,18 @@
 namespace GroupTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class groupstatus : Migration
+    public partial class tracker : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "LectionsAmount",
+                table: "LecturerGroups",
+                newName: "WeeksAmount");
+
             migrationBuilder.AddColumn<int>(
-                name: "Status",
+                name: "CurrentWeek",
                 table: "LecturerGroups",
                 type: "int",
                 nullable: false,
@@ -22,8 +27,13 @@ namespace GroupTracker.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Status",
+                name: "CurrentWeek",
                 table: "LecturerGroups");
+
+            migrationBuilder.RenameColumn(
+                name: "WeeksAmount",
+                table: "LecturerGroups",
+                newName: "LectionsAmount");
         }
     }
 }

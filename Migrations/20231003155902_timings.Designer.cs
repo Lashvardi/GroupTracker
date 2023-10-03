@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupTracker.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230919130730_verification infp")]
-    partial class verificationinfp
+    [Migration("20231003155902_timings")]
+    partial class timings
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,8 +62,8 @@ namespace GroupTracker.Migrations
                     b.Property<int>("LectureSessionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WeekNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("WeekNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -151,6 +151,9 @@ namespace GroupTracker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Subjects")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VerificationCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -173,6 +176,15 @@ namespace GroupTracker.Migrations
                     b.Property<int?>("CurrentSyllabusTopicId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CurrentWeek")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DoIStart")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Grade")
                         .HasColumnType("nvarchar(max)");
 
@@ -182,7 +194,13 @@ namespace GroupTracker.Migrations
                     b.Property<int>("LecturerId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeeksAmount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

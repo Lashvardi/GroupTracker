@@ -36,25 +36,49 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
         var newGroup = await _groupService.CreateGroup(completeGroupInput);
         newGroup.LecturerId = lecturerId;
 
-        var newSession = await _lectureSessionService.CreateLectureSession(completeGroupInput.Session);
+        // Create sessions based on the number of weeks and alternate flag
+        List<LectureSession> allSessions = new List<LectureSession>();
+        List<GroupLectureSession> allGroupLectureSessions = new List<GroupLectureSession>();
 
-        List<AlternateWeek> newAlternateWeeks = null;
-        if (newSession.IsAlternate)
+        int totalWeeks = completeGroupInput.Group.WeeksAmount;
+        List<AlternateWeek> alternateWeeks = null;
+
+        if (completeGroupInput.Session.IsAlternate)
         {
-            newAlternateWeeks = await _alternateWeekService.CreateAlternateWeeks(completeGroupInput.AlternateWeeks);
+            bool doIStart = completeGroupInput.Session.StartFromFirstWeek;
+            alternateWeeks = await _alternateWeekService.CreateAlternateWeeks(doIStart, totalWeeks);
         }
 
-        var newGroupLectureSession = new GroupLectureSession
+        int sessionCount;
+        if (completeGroupInput.Session.IsAlternate)
         {
-            Group = newGroup,
-            LectureSession = newSession
-        };
+            sessionCount = alternateWeeks.Count;
+        }
+        else
+        {
+            sessionCount = totalWeeks;
+        }
 
-        newGroup.GroupLectureSessions = new List<GroupLectureSession> { newGroupLectureSession };
-        newSession.AlternateWeeks = newAlternateWeeks;
+        for (int i = 0; i < sessionCount; i++)
+        {
+            var newSession = await _lectureSessionService.CreateLectureSession(completeGroupInput.Session);
+            allSessions.Add(newSession);
+
+            var newGroupLectureSession = new GroupLectureSession
+            {
+                Group = newGroup,
+                LectureSession = newSession
+            };
+
+            allGroupLectureSessions.Add(newGroupLectureSession);
+        }
+
+
+        newGroup.GroupLectureSessions = allGroupLectureSessions;
 
         await _context.LecturerGroups.AddAsync(newGroup);
-        await _context.GroupLectureSessions.AddAsync(newGroupLectureSession);
+        await _context.LectureSessions.AddRangeAsync(allSessions);
+        await _context.GroupLectureSessions.AddRangeAsync(allGroupLectureSessions);
         await _context.SaveChangesAsync();
 
         return newGroup;

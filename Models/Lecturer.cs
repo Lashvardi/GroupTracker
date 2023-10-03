@@ -11,8 +11,11 @@ public class Lecturer
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    // Employment Information
+    // Employment Information CSV
     public string Companies { get; set; }
+
+    // Academic Information CSV
+    public string Subjects { get; set; }
 
     // Authentication and Authorization
     [Required]

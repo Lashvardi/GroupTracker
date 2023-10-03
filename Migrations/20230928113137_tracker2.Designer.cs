@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupTracker.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230917160145_sylabussTopic")]
-    partial class sylabussTopic
+    [Migration("20230928113137_tracker2")]
+    partial class tracker2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,17 +56,44 @@ namespace GroupTracker.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsMyturn")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LectureSessionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WeekNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("WeekNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LectureSessionId");
 
                     b.ToTable("AlternateWeeks");
+                });
+
+            modelBuilder.Entity("GroupTracker.Models.FileAttachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SyllabusTopicId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SyllabusTopicId");
+
+                    b.ToTable("FileAttachment");
                 });
 
             modelBuilder.Entity("GroupTracker.Models.LectureSession", b =>
@@ -114,11 +141,20 @@ namespace GroupTracker.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subjects")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VerificationCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -140,6 +176,12 @@ namespace GroupTracker.Migrations
                     b.Property<int?>("CurrentSyllabusTopicId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CurrentWeek")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DoIStart")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Grade")
                         .HasColumnType("nvarchar(max)");
 
@@ -147,6 +189,12 @@ namespace GroupTracker.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LecturerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeeksAmount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -217,6 +265,17 @@ namespace GroupTracker.Migrations
                     b.Navigation("LectureSession");
                 });
 
+            modelBuilder.Entity("GroupTracker.Models.FileAttachment", b =>
+                {
+                    b.HasOne("GroupTracker.Models.SyllabusTopic", "SyllabusTopic")
+                        .WithMany("FileAttachments")
+                        .HasForeignKey("SyllabusTopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SyllabusTopic");
+                });
+
             modelBuilder.Entity("GroupTracker.Models.LecturerGroup", b =>
                 {
                     b.HasOne("GroupTracker.Models.SyllabusTopic", "CurrentSyllabusTopic")
@@ -225,7 +284,7 @@ namespace GroupTracker.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("GroupTracker.Models.Lecturer", "Lecturer")
-                        .WithMany("LecturerGroup")
+                        .WithMany("LecturerGroups")
                         .HasForeignKey("LecturerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -255,7 +314,7 @@ namespace GroupTracker.Migrations
 
             modelBuilder.Entity("GroupTracker.Models.Lecturer", b =>
                 {
-                    b.Navigation("LecturerGroup");
+                    b.Navigation("LecturerGroups");
                 });
 
             modelBuilder.Entity("GroupTracker.Models.LecturerGroup", b =>
@@ -263,6 +322,11 @@ namespace GroupTracker.Migrations
                     b.Navigation("GroupLectureSessions");
 
                     b.Navigation("SyllabusTopics");
+                });
+
+            modelBuilder.Entity("GroupTracker.Models.SyllabusTopic", b =>
+                {
+                    b.Navigation("FileAttachments");
                 });
 #pragma warning restore 612, 618
         }

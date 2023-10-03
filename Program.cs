@@ -1,6 +1,8 @@
 using GroupTracker.data;
 using Microsoft.EntityFrameworkCore;
 using GroupTracker.Extensions;
+using GroupTracker.ENV;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -17,17 +19,18 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
-        options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
+        options.UseSqlServer("Data Source=(localdb)\\groupTracker;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add services to the container.
-ServiceConfiguration.ConfigureServices(builder.Services);
+ServiceConfiguration.ConfigureServices(builder.Services, builder.Configuration);
 
 
 var app = builder.Build();
+app.Services.GetRequiredService<IOptions<AppSettings>>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

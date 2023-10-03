@@ -1,5 +1,4 @@
-﻿using GroupTracker.Migrations;
-using GroupTracker.Models;
+﻿using GroupTracker.Models;
 using GroupTracker.Services.Abstraction.Syllabus;
 using Microsoft.AspNetCore.Mvc;
 

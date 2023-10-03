@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupTracker.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230918102718_file storage")]
-    partial class filestorage
+    [Migration("20230928112915_total lections")]
+    partial class totallections
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,11 +56,14 @@ namespace GroupTracker.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsMyturn")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LectureSessionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WeekNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("WeekNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -138,11 +141,20 @@ namespace GroupTracker.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subjects")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VerificationCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -169,6 +181,9 @@ namespace GroupTracker.Migrations
 
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LectionsAmount")
+                        .HasColumnType("int");
 
                     b.Property<int>("LecturerId")
                         .HasColumnType("int");
