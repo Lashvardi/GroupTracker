@@ -146,7 +146,8 @@ public class LecturerService : ILecturerService
         {
             Email = lecturer.Email,
             FullName = Fullname,
-            Companies = string.Join(", ", lecturer.LecturerGroups.Select(lg => lg.CompanyName).Distinct()),
+            Companies = new List<string>(lecturer.Companies.Split(',').Select(c => c.Trim())),
+            Subjects = new List<string>(lecturer.Subjects.Split(',').Select(c => c.Trim())),
             GroupCount = lecturer.LecturerGroups.Count,
             Groups = lecturer.LecturerGroups.Select(lg => new LecturerGroupDTO
             {
@@ -161,6 +162,7 @@ public class LecturerService : ILecturerService
                     SessionDate = gls.LectureSession.Day,
                     SessionTime = gls.LectureSession.Time.ToString(),
                     IsOnline = gls.LectureSession.IsOnline,
+                    Auditorium = gls.LectureSession.Auditorium,
                     IsAlternate = gls.LectureSession.IsAlternate,
                 }).ToList()
             }).ToList(),

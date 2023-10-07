@@ -9,6 +9,13 @@
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:Lashvarda",
       "dynamicId": null
+    },
+    "mssql2": {
+      "serviceConnectorResourceId": "",
+      "secretStore": null,
+      "type": "mssql.local",
+      "connectionId": "ScraperAPI",
+      "dynamicId": null
     }
   }
 }

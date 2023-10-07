@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -19,6 +20,7 @@ namespace GroupTracker.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Companies = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Subjects = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false),
@@ -35,7 +37,7 @@ namespace GroupTracker.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Day = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Day = table.Column<int>(type: "int", nullable: false),
                     Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Auditorium = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsOnline = table.Column<bool>(type: "bit", nullable: false),
@@ -44,27 +46,6 @@ namespace GroupTracker.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LectureSessions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AlternateWeeks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    WeekNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LectureSessionId = table.Column<int>(type: "int", nullable: false),
-                    IsMyturn = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AlternateWeeks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AlternateWeeks_LectureSessions_LectureSessionId",
-                        column: x => x.LectureSessionId,
-                        principalTable: "LectureSessions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,8 +93,15 @@ namespace GroupTracker.Migrations
                     GroupName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Grade = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    LecturerId = table.Column<int>(type: "int", nullable: false),
-                    CurrentSyllabusTopicId = table.Column<int>(type: "int", nullable: true)
+                    CurrentSession = table.Column<int>(type: "int", nullable: false),
+                    SessionsAmount = table.Column<int>(type: "int", nullable: false),
+                    DoIStart = table.Column<bool>(type: "bit", nullable: false),
+                    PerWeek = table.Column<int>(type: "int", nullable: false),
+                    SessionsFilled = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CurrentSyllabusTopicId = table.Column<int>(type: "int", nullable: true),
+                    LecturerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,11 +135,6 @@ namespace GroupTracker.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AlternateWeeks_LectureSessionId",
-                table: "AlternateWeeks",
-                column: "LectureSessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FileAttachment_SyllabusTopicId",
@@ -214,9 +197,6 @@ namespace GroupTracker.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_LecturerGroups_SyllabusTopics_CurrentSyllabusTopicId",
                 table: "LecturerGroups");
-
-            migrationBuilder.DropTable(
-                name: "AlternateWeeks");
 
             migrationBuilder.DropTable(
                 name: "FileAttachment");

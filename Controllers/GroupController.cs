@@ -72,5 +72,20 @@ namespace GroupTracker.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("get-sessions-for-lecturer")]
+        public async Task<IActionResult> GetGroupDetailsWithSessionsForLecturer(int groupId, int lecturerId)
+        {
+            try
+            {
+                var group = await _lecturerGroupCoordinator.GetGroupDetailsWithSessionsForLecturer(groupId, lecturerId);
+                return Ok(group);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

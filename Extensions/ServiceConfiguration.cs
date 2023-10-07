@@ -22,7 +22,6 @@ namespace GroupTracker.Extensions
             services.AddScoped<ILecturerService, LecturerService>();
             services.AddScoped<ILecturerGroupCoordinator, LecturerGroupCoordinator>();
             services.AddScoped<ILectureSessionService, LecturerSessionService>();
-            services.AddScoped<IAlternateWeekService, AlternateWeekService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<ISyllabusTopicService, SyllabusTopicService>();
             services.AddScoped<IFileStorageService, FileStorageService>();

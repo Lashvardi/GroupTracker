@@ -45,30 +45,6 @@ namespace GroupTracker.Migrations
                     b.ToTable("GroupLectureSessions");
                 });
 
-            modelBuilder.Entity("GroupTracker.Models.AlternateWeek", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsMyturn")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LectureSessionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeekNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LectureSessionId");
-
-                    b.ToTable("AlternateWeeks");
-                });
-
             modelBuilder.Entity("GroupTracker.Models.FileAttachment", b =>
                 {
                     b.Property<int>("Id")
@@ -104,8 +80,8 @@ namespace GroupTracker.Migrations
                     b.Property<string>("Auditorium")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Day")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsAlternate")
                         .HasColumnType("bit");
@@ -170,10 +146,10 @@ namespace GroupTracker.Migrations
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CurrentSyllabusTopicId")
+                    b.Property<int>("CurrentSession")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentWeek")
+                    b.Property<int?>("CurrentSyllabusTopicId")
                         .HasColumnType("int");
 
                     b.Property<bool>("DoIStart")
@@ -191,13 +167,19 @@ namespace GroupTracker.Migrations
                     b.Property<int>("LecturerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PerWeek")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionsAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionsFilled")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeeksAmount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -257,17 +239,6 @@ namespace GroupTracker.Migrations
                     b.Navigation("LectureSession");
                 });
 
-            modelBuilder.Entity("GroupTracker.Models.AlternateWeek", b =>
-                {
-                    b.HasOne("GroupTracker.Models.LectureSession", "LectureSession")
-                        .WithMany("AlternateWeeks")
-                        .HasForeignKey("LectureSessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LectureSession");
-                });
-
             modelBuilder.Entity("GroupTracker.Models.FileAttachment", b =>
                 {
                     b.HasOne("GroupTracker.Models.SyllabusTopic", "SyllabusTopic")
@@ -310,8 +281,6 @@ namespace GroupTracker.Migrations
 
             modelBuilder.Entity("GroupTracker.Models.LectureSession", b =>
                 {
-                    b.Navigation("AlternateWeeks");
-
                     b.Navigation("GroupLectureSessions");
                 });
 

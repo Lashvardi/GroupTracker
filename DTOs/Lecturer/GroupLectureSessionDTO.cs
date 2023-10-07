@@ -1,9 +1,12 @@
-﻿namespace GroupTracker.DTOs.Lecturer;
+﻿using GroupTracker.Enums;
+
+namespace GroupTracker.DTOs.Lecturer;
 
 public class GroupLectureSessionDTO
 {
-    public string SessionDate { get; set; }
+    public Weekday SessionDate { get; set; }
     public string SessionTime { get; set; }
     public bool IsOnline { get; set; }
     public bool IsAlternate { get; set; }
+    public string Auditorium { get; set; }
 }

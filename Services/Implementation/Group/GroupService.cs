@@ -23,8 +23,9 @@ public class GroupService : IGroupService
             CompanyName = completeGroupInput.Group.CompanyName,
             GroupName = completeGroupInput.Group.GroupName,
             Grade = completeGroupInput.Group.Grade,
-            WeeksAmount = completeGroupInput.Group.WeeksAmount,
+            SessionsAmount = completeGroupInput.Group.SessionsAmount,
             StartDate = completeGroupInput.Group.StartDate,
+            EndDate = completeGroupInput.Group.StartDate.AddMonths(6),
             DoIStart = completeGroupInput.Group.DoIStart,
         };
         await _context.LecturerGroups.AddAsync(newGroup);

@@ -7,6 +7,11 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:Lashvarda",
       "dynamicId": null
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ScraperAPI",
+      "dynamicId": null
     }
   }
 }

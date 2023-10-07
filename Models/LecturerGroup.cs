@@ -19,12 +19,20 @@ public class LecturerGroup
 
 
 
-    public int CurrentWeek { get; set; } = 0;
-    public int WeeksAmount { get; set; } = 0;
+    public int CurrentSession { get; set; } = 0;
+    public int SessionsAmount { get; set; } = 0;
     public bool DoIStart { get;set; } = false;
 
+    public int PerWeek { get; set; } = 0;
+    public int SessionsFilled { get; set; } = 0;
+
     public DateTime StartDate { get; set; }
+
+    //TODO: In Frontend Make Dropdown of lengths for the groups and automatically send that amount +6 month or sm like that
     public DateTime EndDate { get; set; }
+
+    public int? CurrentSyllabusTopicId { get; set; }
+
 
     // Navigation Properties
     public int LecturerId { get; set; }
@@ -35,7 +43,6 @@ public class LecturerGroup
     public ICollection<GroupLectureSession> GroupLectureSessions { get; set; }
     public ICollection<SyllabusTopic> SyllabusTopics { get; set; }
 
-    public int? CurrentSyllabusTopicId { get; set; }
 
     [JsonIgnore]
     public SyllabusTopic CurrentSyllabusTopic { get; set; }

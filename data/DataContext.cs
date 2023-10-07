@@ -14,7 +14,6 @@ public class DataContext : DbContext
     public DbSet<LectureSession> LectureSessions { get; set; }
     public DbSet<GroupLectureSession> GroupLectureSessions { get; set; }
     public DbSet<SyllabusTopic> SyllabusTopics { get; set; }
-    public DbSet<AlternateWeek> AlternateWeeks { get; set; }
 
 
 
@@ -28,5 +27,11 @@ public class DataContext : DbContext
             .WithMany()
             .HasForeignKey(lg => lg.CurrentSyllabusTopicId)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        modelBuilder.Entity<LectureSession>()
+            .Property(e => e.Day)
+            .HasConversion<int>();
+
     }
 }

@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
-        options.UseSqlServer("Data Source=(localdb)\\groupTracker;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
+        options.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=TestingNewDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
 
 
 builder.Services.AddEndpointsApiExplorer();

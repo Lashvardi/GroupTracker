@@ -1,5 +1,6 @@
 ﻿using GroupTracker.data;
 using GroupTracker.DTOs.Groups;
+using GroupTracker.Enums;
 using GroupTracker.Models;
 using GroupTracker.Services.Abstraction.Group;
 
@@ -14,16 +15,20 @@ public class LecturerSessionService : ILectureSessionService
         _context = dataContext;
     }
 
-    public async Task<LectureSession> CreateLectureSession(LectureSessionDTO lectureSessionDTO)
+    public async Task<LectureSession> CreateLectureSession(LectureSessionDTO lectureSessionDTO, Weekday day)
     {
         var newSession = new LectureSession
         {
-            Day = lectureSessionDTO.Day,
+            Day = day,
             Time = lectureSessionDTO.Time,
             Auditorium = lectureSessionDTO.Auditorium,
             IsOnline = lectureSessionDTO.IsOnline,
             IsAlternate = lectureSessionDTO.IsAlternate
         };
+
+        _context.LectureSessions.Add(newSession);
+
         return newSession;
     }
+
 }

@@ -1,4 +1,5 @@
 ﻿using GroupTracker.DTOs.GroupLectureSession;
+using GroupTracker.Enums;
 
 namespace GroupTracker.Models;
 
@@ -7,7 +8,7 @@ public class LectureSession
     public int Id { get; set; }
 
 
-    public string Day { get; set; }
+    public Weekday Day { get; set; }
     public string Time { get; set; }
 
     public string Auditorium { get; set; }
@@ -15,6 +16,5 @@ public class LectureSession
     public bool IsAlternate { get; set; } = false;
 
     public ICollection<GroupLectureSession> GroupLectureSessions { get; set; }
-    public ICollection<AlternateWeek> AlternateWeeks { get; set; } = new List<AlternateWeek>();
 
 }
