@@ -13,7 +13,6 @@ public class LectureSession
 
     public string Auditorium { get; set; }
     public bool IsOnline { get; set; } = false;
-    public bool IsAlternate { get; set; } = false;
 
     public ICollection<GroupLectureSession> GroupLectureSessions { get; set; }
 

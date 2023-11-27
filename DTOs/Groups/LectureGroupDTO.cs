@@ -9,8 +9,9 @@ public class LectureGroupDTO
     public string Grade { get; set; }
     public GroupStatus Status { get; set; }
     public int SessionsAmount { get; set; }
-    public bool DoIStart { get; set; }
     public DateTime StartDate { get; set; }
     public int PerWeek { get; set; }
-
+    public bool IsOnline { get; set; }
+    public string HEXColor { get; set; }
+    public string GroupType { get; set; }
 }

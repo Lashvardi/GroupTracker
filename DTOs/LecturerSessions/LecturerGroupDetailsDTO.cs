@@ -14,10 +14,9 @@ public class LecturerGroupDetailsDTO
     public DateTime EndDate { get; set; }
     public int CurrentSession { get; set; }
     public int SessionsAmount { get; set; }
-    public bool DoIStart { get; set; }
-    public int PerWeek { get; set; }
-    public int SessionsFilled { get; set; }
     public int? CurrentSyllabusTopicId { get; set; }
+    public string HEXColor { get; set; }
+    public string GroupType { get; set; }
 
     public List<LectureSessionGetDTO> Sessions { get; set; }
 }
@@ -29,5 +28,4 @@ public class LectureSessionGetDTO
     public string Time { get; set; }
     public string Auditorium { get; set; }
     public bool IsOnline { get; set; }
-    public bool IsAlternate { get; set; }
 }

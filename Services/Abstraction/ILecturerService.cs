@@ -14,7 +14,24 @@ public interface ILecturerService
     Task<List<LecturerCompanies>> GetLecturerCompanies(int id);
 
 
-
     Task<LecturerDTO> GetLecturerInfoAsync(int lecturerId);
+
+
+    // Images related stuff
+    Task<IFormFile> UploadProfilePictureAsync(int lecturerId, IFormFile file);
+    Task<string> GetProfilePictureAsync(int lecturerId);
+    void DeleteProfilePicture(int lecturerId);
+
+    Task<IFormFile> UploadBannerPictureAsync(int lecturerId, IFormFile file);
+    Task<string> GetbannerImageAsync(int lecturerId);
+    void DeleteBannerPicture(int lecturerId);
+
+
+    // Socials related stuff
+    Task<LecturerSocialsDTO> AddSocialsAsync(int lecturerId, LecturerSocialsDTO socials);
+    Task<LecturerSocialsDTO> GetSocialsAsync(int lecturerId);
+
+    // has filled out socials
+    Task<bool> HasFilledOutSocialsAsync(int lecturerId);
 
 }

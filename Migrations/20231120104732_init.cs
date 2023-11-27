@@ -40,8 +40,7 @@ namespace GroupTracker.Migrations
                     Day = table.Column<int>(type: "int", nullable: false),
                     Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Auditorium = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsOnline = table.Column<bool>(type: "bit", nullable: false),
-                    IsAlternate = table.Column<bool>(type: "bit", nullable: false)
+                    IsOnline = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,7 +94,7 @@ namespace GroupTracker.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     CurrentSession = table.Column<int>(type: "int", nullable: false),
                     SessionsAmount = table.Column<int>(type: "int", nullable: false),
-                    DoIStart = table.Column<bool>(type: "bit", nullable: false),
+                    IsOnline = table.Column<bool>(type: "bit", nullable: false),
                     PerWeek = table.Column<int>(type: "int", nullable: false),
                     SessionsFilled = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),

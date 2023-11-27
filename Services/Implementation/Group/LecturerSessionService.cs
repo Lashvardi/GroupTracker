@@ -23,7 +23,6 @@ public class LecturerSessionService : ILectureSessionService
             Time = lectureSessionDTO.Time,
             Auditorium = lectureSessionDTO.Auditorium,
             IsOnline = lectureSessionDTO.IsOnline,
-            IsAlternate = lectureSessionDTO.IsAlternate
         };
 
         _context.LectureSessions.Add(newSession);

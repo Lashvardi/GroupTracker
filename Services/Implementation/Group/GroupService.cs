@@ -26,7 +26,10 @@ public class GroupService : IGroupService
             SessionsAmount = completeGroupInput.Group.SessionsAmount,
             StartDate = completeGroupInput.Group.StartDate,
             EndDate = completeGroupInput.Group.StartDate.AddMonths(6),
-            DoIStart = completeGroupInput.Group.DoIStart,
+            IsOnline = completeGroupInput.Group.IsOnline,
+            HEX = completeGroupInput.Group.HEXColor,
+            GroupType = completeGroupInput.Group.GroupType,
+
         };
         await _context.LecturerGroups.AddAsync(newGroup);
         return newGroup;

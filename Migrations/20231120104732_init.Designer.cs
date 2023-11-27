@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupTracker.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231007101258_init")]
+    [Migration("20231120104732_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -86,9 +86,6 @@ namespace GroupTracker.Migrations
                     b.Property<int>("Day")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsAlternate")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsOnline")
                         .HasColumnType("bit");
 
@@ -155,9 +152,6 @@ namespace GroupTracker.Migrations
                     b.Property<int?>("CurrentSyllabusTopicId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("DoIStart")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -166,6 +160,9 @@ namespace GroupTracker.Migrations
 
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LecturerId")
                         .HasColumnType("int");

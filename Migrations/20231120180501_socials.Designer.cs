@@ -4,6 +4,7 @@ using GroupTracker.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupTracker.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231120180501_socials")]
+    partial class socials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,12 +185,6 @@ namespace GroupTracker.Migrations
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GroupType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HEX")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsOnline")
                         .HasColumnType("bit");
 
@@ -198,6 +195,9 @@ namespace GroupTracker.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("SessionsAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionsFilled")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")

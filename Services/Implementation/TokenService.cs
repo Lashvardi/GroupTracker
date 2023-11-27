@@ -24,7 +24,8 @@ namespace GroupTracker.Services.Implementation
             {
                 new Claim(ClaimTypes.NameIdentifier, lecturer.Id.ToString()),
                 new Claim(ClaimTypes.Email, lecturer.Email),
-                new Claim(ClaimTypes.Name, lecturer.FirstName + " " + lecturer.LastName)
+                new Claim(ClaimTypes.Name, lecturer.FirstName + " " + lecturer.LastName),
+
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
@@ -33,12 +34,12 @@ namespace GroupTracker.Services.Implementation
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddDays(1), // token expires in 1 day
                 SigningCredentials = creds
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken    (tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
         }

@@ -13,6 +13,6 @@ public interface ILecturerGroupCoordinator
     Task<LecturerGroup> ChangeGroupTopic(int groupId, int topicId);
 
     Task<List<GroupWithSyllabusDTO>> GetAllGroupsWithSyllabusForLecturer(int lecturerId);
-    Task<LecturerGroupDetailsDTO> GetGroupDetailsWithSessionsForLecturer(int groupId, int lecturerId);
+    Task<IEnumerable<LecturerGroupDetailsDTO>> GetGroupDetailsWithSessionsForLecturer( int lecturerId);
 
 }

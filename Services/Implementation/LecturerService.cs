@@ -3,7 +3,9 @@ using GroupTracker.DTOs.Groups;
 using GroupTracker.DTOs.Lecturer;
 using GroupTracker.Models;
 using GroupTracker.Services.Abstraction;
+using GroupTracker.Services.Abstraction.ImageUpload;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SMTP.Authorization.EmailVerification;
 
@@ -15,13 +17,15 @@ public class LecturerService : ILecturerService
     private readonly ITokenService _tokenService;
     private readonly PasswordHasher<LecturerRegistrationInput> _hasher;
     private readonly EmailVerification _emailVerification;
+    private readonly IImageUploadService _imageUploadService;
 
-    public LecturerService(DataContext context, ITokenService tokenService, PasswordHasher<LecturerRegistrationInput> hasher, EmailVerification emailVerification)
+    public LecturerService(DataContext context, ITokenService tokenService, PasswordHasher<LecturerRegistrationInput> hasher, EmailVerification emailVerification, IImageUploadService imageUploadService)
     {
         _context = context;
         _tokenService = tokenService;
         _hasher = hasher;
         _emailVerification = emailVerification;
+        _imageUploadService = imageUploadService;
     }
 
     public async Task<LecturerRegistrationResponse> RegisterLecturer(LecturerRegistrationInput input)
@@ -157,13 +161,16 @@ public class LecturerService : ILecturerService
                 TopicName = lg.CurrentSyllabusTopic?.Title,
                 TopicId = lg.CurrentSyllabusTopic?.Id,
                 Status = lg.Status,
+                HEXColor = lg.HEX,
+                GroupType = lg.GroupType,
+                SessionsAmount = lg.SessionsAmount,
+
                 Sessions = lg.GroupLectureSessions.Select(gls => new GroupLectureSessionDTO
                 {
                     SessionDate = gls.LectureSession.Day,
                     SessionTime = gls.LectureSession.Time.ToString(),
                     IsOnline = gls.LectureSession.IsOnline,
                     Auditorium = gls.LectureSession.Auditorium,
-                    IsAlternate = gls.LectureSession.IsAlternate,
                 }).ToList()
             }).ToList(),
             groupNameWithIds = lecturer.LecturerGroups.Select(lg => new GroupNameWithId
@@ -212,5 +219,236 @@ public class LecturerService : ILecturerService
         }).ToList();
 
         return lecturerCompanies;
+    }
+
+    public async Task<IFormFile> UploadProfilePictureAsync(int lecturerId, IFormFile file)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        if (file == null)
+        {
+            throw new Exception("File is null");
+        }
+        using var image = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+
+        var previousImageUrl = lecturer.ImageUrl;
+
+        if (previousImageUrl != null)
+        {
+            _imageUploadService.DeleteImage(previousImageUrl);
+        }
+
+        int maxWidth = 400;
+        int maxHeight = 400;
+        int originalWidth = image.Width;
+        int originalHeight = image.Height;
+        double ratioX = (double)maxWidth / originalWidth;
+        double ratioY = (double)maxHeight / originalHeight;
+        double ratio = Math.Min(ratioX, ratioY);
+
+        int newWidth = (int)(originalWidth * ratio);
+        int newHeight = (int)(originalHeight * ratio);
+
+        image.Mutate(x => x.Resize(newWidth, newHeight));
+
+        var tempFileName = Path.GetTempFileName();
+        // Save the resized image as a new file
+        await using (var tempFileStream = new FileStream(tempFileName, FileMode.Create))
+        {
+            await image.SaveAsJpegAsync(tempFileStream);
+        }
+
+        // Create a new FormFile for the resized image
+        await using var resizedFileStream = new FileStream(tempFileName, FileMode.Open, FileAccess.Read);
+        var resizedFile = new FormFile(resizedFileStream, 0, resizedFileStream.Length, file.Name, file.FileName);
+
+        // Save the resized image using your existing service
+        var fileResult = _imageUploadService.SaveImage(resizedFile);
+
+        if (fileResult.Item1 == 1)
+        {
+            lecturer.ImageUrl = fileResult.Item2;
+        }
+
+        _context.Update(lecturer);
+        await _context.SaveChangesAsync();
+
+        // Properly dispose of the file stream before attempting to delete the file
+        await resizedFileStream.DisposeAsync();
+
+        File.Delete(tempFileName);
+
+        // Return the original file (or you might want to return resizedFile if that's intended)
+        return file;
+    }
+
+
+
+    public Task<string> GetProfilePictureAsync(int lecturerId)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        return Task.FromResult(lecturer.ImageUrl);
+
+    }
+
+    public async Task<IFormFile> UploadBannerPictureAsync(int lecturerId, IFormFile file)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        if (file == null)
+        {
+            throw new Exception("File is null");
+        }
+        using var image = SixLabors.ImageSharp.Image.Load(file.OpenReadStream());
+
+        var previousImageUrl = lecturer.bannerImageUrl;
+
+        if (previousImageUrl != null)
+        {
+            _imageUploadService.DeleteImage(previousImageUrl);
+        }
+
+        int maxWidth = 1920;
+        int maxHeight = 1200;
+        int originalWidth = image.Width;
+        int originalHeight = image.Height;
+        double ratioX = (double)maxWidth / originalWidth;
+        double ratioY = (double)maxHeight / originalHeight;
+        double ratio = Math.Min(ratioX, ratioY);
+
+        int newWidth = (int)(originalWidth * ratio);
+        int newHeight = (int)(originalHeight * ratio);
+
+        image.Mutate(x => x.Resize(newWidth, newHeight));
+
+        var tempFileName = Path.GetTempFileName();
+        // Save the resized image as a new file
+        await using (var tempFileStream = new FileStream(tempFileName, FileMode.Create))
+        {
+            await image.SaveAsJpegAsync(tempFileStream);
+        }
+
+        // Create a new FormFile for the resized image
+        await using var resizedFileStream = new FileStream(tempFileName, FileMode.Open, FileAccess.Read);
+        var resizedFile = new FormFile(resizedFileStream, 0, resizedFileStream.Length, file.Name, file.FileName);
+
+        // Save the resized image using your existing service
+        var fileResult = _imageUploadService.SaveImage(resizedFile);
+
+        if (fileResult.Item1 == 1)
+        {
+            lecturer.bannerImageUrl = fileResult.Item2;
+        }
+
+        _context.Update(lecturer);
+        await _context.SaveChangesAsync();
+
+        // Properly dispose of the file stream before attempting to delete the file
+        await resizedFileStream.DisposeAsync();
+
+        File.Delete(tempFileName);
+
+        // Return the original file (or you might want to return resizedFile if that's intended)
+        return file;
+    }
+
+    public Task<string> GetbannerImageAsync(int lecturerId)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        return Task.FromResult(lecturer.bannerImageUrl);
+    }
+
+    public void DeleteProfilePicture(int lecturerId)
+
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        var previousImageUrl = lecturer.ImageUrl;
+        lecturer.ImageUrl = null;
+
+        if (previousImageUrl != null)
+        {
+            _imageUploadService.DeleteImage(previousImageUrl);
+        }
+        else
+        {
+            lecturer.ImageUrl = null;
+            throw new Exception("Lecturer Does Not Have A Profile Picture");
+        }
+
+
+        _context.Update(lecturer);
+        _context.SaveChanges();
+    }
+
+    public void DeleteBannerPicture(int lecturerId)
+    {
+    var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        var previousImageUrl = lecturer.bannerImageUrl;
+        lecturer.bannerImageUrl = null;
+
+        if (previousImageUrl != null)
+    {
+            _imageUploadService.DeleteImage(previousImageUrl);
+        }
+        else
+        {
+            lecturer.bannerImageUrl = null;
+            throw new Exception("Lecturer Does Not Have A Banner Picture");
+        }
+
+
+        _context.Update(lecturer);
+        _context.SaveChanges();
+    }
+
+    public Task<LecturerSocialsDTO> AddSocialsAsync(int lecturerId, LecturerSocialsDTO socials)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        lecturer.FacebookLink = socials.FacebookLink ?? lecturer.FacebookLink;
+        lecturer.TwitterLink = socials.TwitterLink ?? lecturer.TwitterLink;
+        lecturer.InstagramLink = socials.InstagramLink ?? socials.InstagramLink;
+        lecturer.LinkedInLink = socials.LinkedInLink ?? lecturer.LinkedInLink;
+        lecturer.YouTubeLink = socials.YouTubeLink ?? lecturer.YouTubeLink;
+        lecturer.PersonalWebsiteLink = socials.PersonalWebsiteLink ?? socials.PersonalWebsiteLink;
+
+        _context.Update(lecturer);
+        _context.SaveChanges();
+
+        return Task.FromResult(socials);
+    }
+
+    public Task<LecturerSocialsDTO> GetSocialsAsync(int lecturerId)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        var socials = new LecturerSocialsDTO
+        {
+            FacebookLink = lecturer.FacebookLink,
+            TwitterLink = lecturer.TwitterLink,
+            InstagramLink = lecturer.InstagramLink,
+            LinkedInLink = lecturer.LinkedInLink,
+            YouTubeLink = lecturer.YouTubeLink,
+            PersonalWebsiteLink = lecturer.PersonalWebsiteLink
+        };
+
+
+        return Task.FromResult(socials);
+    }
+
+    public Task<bool> HasFilledOutSocialsAsync(int lecturerId)
+    {
+        var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
+
+        if (lecturer.FacebookLink == null && lecturer.TwitterLink == null && lecturer.InstagramLink == null && lecturer.LinkedInLink == null && lecturer.YouTubeLink == null && lecturer.PersonalWebsiteLink == null)
+        {
+            return Task.FromResult(false);
+        }
+
+        return Task.FromResult(true);
     }
 }

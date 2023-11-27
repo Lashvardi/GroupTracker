@@ -9,6 +9,7 @@ public class DataContext : DbContext
     {
     }
 
+
     public DbSet<Lecturer> Lecturers { get; set;}
     public DbSet<LecturerGroup> LecturerGroups { get; set; }
     public DbSet<LectureSession> LectureSessions { get; set; }

@@ -74,11 +74,11 @@ namespace GroupTracker.Controllers
         }
 
         [HttpGet("get-sessions-for-lecturer")]
-        public async Task<IActionResult> GetGroupDetailsWithSessionsForLecturer(int groupId, int lecturerId)
+        public async Task<IActionResult> GetGroupDetailsWithSessionsForLecturer(int lecturerId)
         {
             try
             {
-                var group = await _lecturerGroupCoordinator.GetGroupDetailsWithSessionsForLecturer(groupId, lecturerId);
+                var group = await _lecturerGroupCoordinator.GetGroupDetailsWithSessionsForLecturer(lecturerId);
                 return Ok(group);
             }
             catch (Exception ex)

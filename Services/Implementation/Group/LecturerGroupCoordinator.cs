@@ -4,6 +4,7 @@ using GroupTracker.DTOs.Groups;
 using GroupTracker.DTOs.Lecturer;
 using GroupTracker.DTOs.LecturerSessions;
 using GroupTracker.DTOs.Syllabus;
+using GroupTracker.Enums;
 using GroupTracker.Models;
 using GroupTracker.Services.Abstraction.Group;
 using Microsoft.EntityFrameworkCore;
@@ -39,43 +40,37 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
 
         int totalSessions = completeGroupInput.Group.SessionsAmount;
         int sessionsPerWeek = completeGroupInput.Group.PerWeek;
+        int totalWeeks = totalSessions / sessionsPerWeek;
 
-        int sessionsPerDay = totalSessions / sessionsPerWeek;
 
-        bool isAlternate = completeGroupInput.Session.IsAlternate;
-        bool startFromFirstWeek = completeGroupInput.Session.StartFromFirstWeek;
 
-        for (int i = 0; i < sessionsPerDay; i++)
+        for (int week = 0; week < totalWeeks; week++)
         {
-            foreach (var day in completeGroupInput.Session.Days)
+            for (int sessionIndex = 0; sessionIndex < sessionsPerWeek ; sessionIndex++)
             {
-                if (isAlternate)
+                int day = sessionIndex % 2 == 0 ? 0 : 4; // Alternating between day 0 and day 4
+
+                var session = new LectureSession
                 {
-                    if (startFromFirstWeek && i % 2 == 1)
-                    {
-                        continue;
-                    }
-                    else if (!startFromFirstWeek && i % 2 == 0)
-                    {
-                        continue;
-                    }
-                }
+                    Auditorium = completeGroupInput.Session.Auditorium,
+                    Day = (Weekday)day, // Use the calculated day
+                    Time = completeGroupInput.Session.Time,
+                    IsOnline = completeGroupInput.Session.IsOnline,
+                };
+                await _lectureSessionService.CreateLectureSession(completeGroupInput.Session, (Weekday)day);
+                allSessions.Add(session);
 
-                var newSession = await _lectureSessionService.CreateLectureSession(completeGroupInput.Session, day);
-                allSessions.Add(newSession);
-
-                var newGroupLectureSession = new GroupLectureSession
+                allGroupLectureSessions.Add(new GroupLectureSession
                 {
                     Group = newGroup,
-                    LectureSession = newSession,
+                    LectureSession = session,
                     GroupId = newGroup.Id,
-                    LectureSessionId = newSession.Id
-                };
-
-
-                allGroupLectureSessions.Add(newGroupLectureSession);
+                    LectureSessionId = session.Id
+                });
             }
         }
+
+
 
         newGroup.GroupLectureSessions = allGroupLectureSessions;
 
@@ -107,6 +102,7 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
         return group;
     }
 
+    // changing the topic of the group (Sylabuss)
     public async Task<LecturerGroup> ChangeGroupTopic(int groupId, int topicId)
     {
         var group = await _context.LecturerGroups
@@ -129,14 +125,19 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
     }
 
 
+    //getting the groip with sylabuss topics
     public async Task<List<GroupWithSyllabusDTO>> GetAllGroupsWithSyllabusForLecturer(int lecturerId)
     {
         var groups = await _context.LecturerGroups
                     .Where(x => x.LecturerId == lecturerId)
                     .Include(x => x.SyllabusTopics)
                     .Include(x => x.GroupLectureSessions)
+
                         .ThenInclude(gl => gl.LectureSession)
                     .ToListAsync();
+
+        var session = await _context.LectureSessions.FirstOrDefaultAsync(x => x.Id == groups.FirstOrDefault().CurrentSession);
+                    
 
         if (!groups.Any())
         {
@@ -146,7 +147,6 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
         var groupWithSyllabusDTOs = groups.Select(group =>
         {
             bool isOnline = group.GroupLectureSessions.FirstOrDefault()?.LectureSession.IsOnline ?? false;
-            bool isAlternate = group.GroupLectureSessions.FirstOrDefault()?.LectureSession.IsAlternate ?? false;
 
             return new GroupWithSyllabusDTO
             {
@@ -155,7 +155,15 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
                 Grade = group.Grade,
                 Status = group.Status,
                 IsOnline = isOnline,
-                IsAlternate = isAlternate,
+                IsAlternate = group.GroupType == "Alternate",
+                SessionsAmount = group.SessionsAmount,
+                StartDate = group.StartDate,
+                EndDate = group.EndDate,
+                CurrentSession = group.CurrentSession,
+                HEX = group.HEX,
+                GroupType = group.GroupType,
+                Auditorium = group.GroupLectureSessions.FirstOrDefault()?.LectureSession.Auditorium,
+
                 SyllabusTopics = group.SyllabusTopics.Select(t => new SyllabusDTO
                 {
                     Id = t.Id,
@@ -170,22 +178,21 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
         return groupWithSyllabusDTOs;
     }
 
-    public async Task<LecturerGroupDetailsDTO> GetGroupDetailsWithSessionsForLecturer(int groupId, int lecturerId)
+    public async Task<IEnumerable<LecturerGroupDetailsDTO>> GetGroupDetailsWithSessionsForLecturer(int lecturerId)
     {
-        // Fetch the group for the given lecturerId and groupId
-        var group = await _context.LecturerGroups
-            .Where(g => g.Id == groupId && g.LecturerId == lecturerId)
+        // Fetch all groups for the given lecturerId
+        var groups = await _context.LecturerGroups
+            .Where(g => g.LecturerId == lecturerId)
             .Include(g => g.GroupLectureSessions)
                 .ThenInclude(gl => gl.LectureSession)
-            .FirstOrDefaultAsync();
+            .ToListAsync();
 
-        if (group == null)
+        if (!groups.Any())
         {
-            throw new Exception("Group not found for the given lecturer");
+            throw new Exception("No groups found for the given lecturer");
         }
 
-        // Convert the LecturerGroup to DTO
-        var groupDetails = new LecturerGroupDetailsDTO
+        var groupDetailsList = groups.Select(group => new LecturerGroupDetailsDTO
         {
             Id = group.Id,
             CompanyName = group.CompanyName,
@@ -197,6 +204,8 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
             CurrentSession = group.CurrentSession,
             SessionsAmount = group.SessionsAmount,
             CurrentSyllabusTopicId = group.CurrentSyllabusTopicId,
+            GroupType = group.GroupType,
+            HEXColor = group.HEX,
             Sessions = group.GroupLectureSessions.Select(gl => new LectureSessionGetDTO
             {
                 Id = gl.LectureSession.Id,
@@ -204,13 +213,10 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
                 Time = gl.LectureSession.Time,
                 Auditorium = gl.LectureSession.Auditorium,
                 IsOnline = gl.LectureSession.IsOnline,
-                IsAlternate = gl.LectureSession.IsAlternate
             }).ToList()
-        };
+        }).ToList();
 
-        return groupDetails;
+        return groupDetailsList;
     }
-
-
 
 }

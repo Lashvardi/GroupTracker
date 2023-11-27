@@ -11,6 +11,9 @@ public class LecturerGroupDTO
     public string TopicName { get; set; }
     public int? TopicId { get; set; }
     public GroupStatus Status { get; set; }
+    public string HEXColor { get; set; }
+    public string GroupType { get; set; }
+    public int SessionsAmount { get; set; }
 
     public ICollection<GroupLectureSessionDTO> Sessions { get; set; }
 }
