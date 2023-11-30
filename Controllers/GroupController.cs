@@ -87,5 +87,19 @@ namespace GroupTracker.Controllers
             }
         }
 
+        [HttpGet("get-all-for-lecturer")]
+        public async Task<IActionResult> GetAllGroupsForLecturerAsync(int lecturerId)
+        {
+            try
+            {
+                var groups = await _lecturerGroupCoordinator.GetAllGroupsForLecturerAsync(lecturerId);
+                return Ok(groups);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

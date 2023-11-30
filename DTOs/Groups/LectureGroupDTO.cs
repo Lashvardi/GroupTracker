@@ -14,4 +14,7 @@ public class LectureGroupDTO
     public bool IsOnline { get; set; }
     public string HEXColor { get; set; }
     public string GroupType { get; set; }
+    public string Auditorium { get; set; }
+    public string Time { get; set; }
+    public string Days { get; set; }
 }

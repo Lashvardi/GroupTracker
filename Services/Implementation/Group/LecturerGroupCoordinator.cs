@@ -155,7 +155,6 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
                 Grade = group.Grade,
                 Status = group.Status,
                 IsOnline = isOnline,
-                IsAlternate = group.GroupType == "Alternate",
                 SessionsAmount = group.SessionsAmount,
                 StartDate = group.StartDate,
                 EndDate = group.EndDate,
@@ -217,6 +216,50 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
         }).ToList();
 
         return groupDetailsList;
+    }
+
+    public async Task<IEnumerable<LectureGroupDTO>> GetAllGroupsForLecturerAsync(int lecturerId)
+    {
+        var lecturer = await _context.Lecturers.FirstOrDefaultAsync(x => x.Id == lecturerId);
+        if (lecturer == null)
+        {
+            throw new Exception("Lecturer not found");
+        }
+
+        var groups = _context.LecturerGroups.Where(x => x.LecturerId == lecturerId)
+            .Include(x => x.GroupLectureSessions)
+            .ThenInclude(x => x.LectureSession);
+
+
+        if (!await groups.AnyAsync())
+        {
+            throw new Exception("No groups found for the given lecturer");
+        }
+
+
+        var lectureGroupDTOs = await groups.Select(group => new LectureGroupDTO
+        {
+            CompanyName = group.CompanyName,
+            GroupName = group.GroupName,
+            Grade = group.Grade,
+            Status = group.Status,
+            SessionsAmount = group.SessionsAmount,
+            StartDate = group.StartDate,
+            PerWeek = group.PerWeek,
+            IsOnline = group.IsOnline,
+            HEXColor = group.HEX,
+            GroupType = group.GroupType,
+            Auditorium = group.GroupLectureSessions.FirstOrDefault().LectureSession.Auditorium,
+            Time = group.GroupLectureSessions.FirstOrDefault().LectureSession.Time,
+            Days = String.Join(", ", group.GroupLectureSessions
+                              .GroupBy(s => s.LectureSession.Day)
+                              .OrderByDescending(g => g.Count())
+                              .Take(2)
+                              .Select(g => g.Key.ToString())),
+
+        }).ToListAsync();
+
+        return lectureGroupDTOs;
     }
 
 }

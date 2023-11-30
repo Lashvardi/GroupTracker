@@ -15,4 +15,7 @@ public interface ILecturerGroupCoordinator
     Task<List<GroupWithSyllabusDTO>> GetAllGroupsWithSyllabusForLecturer(int lecturerId);
     Task<IEnumerable<LecturerGroupDetailsDTO>> GetGroupDetailsWithSessionsForLecturer( int lecturerId);
 
+    //Get All Groups without Syllabus and Sessions
+    Task<IEnumerable<LectureGroupDTO>> GetAllGroupsForLecturerAsync(int lecturerId);
+
 }
