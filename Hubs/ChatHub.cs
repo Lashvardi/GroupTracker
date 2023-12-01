@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
-using GroupTracker.Services.Implementation.Chat;
+﻿using GroupTracker.Services.Implementation.Chat;
+using Microsoft.AspNetCore.SignalR;
 
 public class ChatHub : Hub
 {
+    public static readonly Dictionary<string, string> UserConnections = new Dictionary<string, string>();
     private readonly ChatService _chatService;
 
     public ChatHub(ChatService chatService)
@@ -16,4 +16,3 @@ public class ChatHub : Hub
         await _chatService.SendMessage(senderId, receiverUserId, message);
     }
 }
-    

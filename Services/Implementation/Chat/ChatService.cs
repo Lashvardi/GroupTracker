@@ -29,7 +29,15 @@ namespace GroupTracker.Services.Implementation.Chat
             _context.ChatMessages.Add(chatMessage);
             await _context.SaveChangesAsync();
 
-            await _hubContext.Clients.User(receiverUserId).SendAsync("ReceiveMessage", senderId, message);
+            Console.WriteLine("Message sent");
+            Console.WriteLine("Sender ID: " + senderId);
+            Console.WriteLine("Receiver ID: " + receiverUserId);
+            Console.WriteLine("Message: " + message);
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", senderId, message);
+
+            Console.WriteLine("Message sent");
         }
+
+
     }
 }

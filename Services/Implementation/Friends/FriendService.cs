@@ -1,5 +1,6 @@
 ﻿using GroupTracker.data;
 using GroupTracker.DTOs.Friends;
+using GroupTracker.Models;
 using GroupTracker.Services.Abstraction.Friends;
 using Microsoft.EntityFrameworkCore;
 
@@ -82,6 +83,16 @@ public class FriendService : IFriendsService
         };
 
         return friendProfile;
+    }
+
+    public async Task<IEnumerable<ChatMessage>> GetMessages(string senderId, string receiverId)
+    {
+        var messages = await _context.ChatMessages
+            .Where(m => m.SenderId == senderId && m.ReceiverId == receiverId ||
+                                   m.SenderId == receiverId && m.ReceiverId == senderId)
+            .ToListAsync();
+
+        return messages;
     }
 
 

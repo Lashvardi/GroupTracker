@@ -42,5 +42,19 @@ namespace GroupTracker.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("get-messages/{senderId}/{receiverId}")]
+        public async Task<IActionResult> GetMessages(string senderId, string receiverId)
+        {
+            try
+            {
+                var result = await _friendsService.GetMessages(senderId, receiverId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

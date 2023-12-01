@@ -10,4 +10,7 @@ public interface IFriendsService
     Task<IEnumerable<FriendDTO>> GetOtherLecturersWithSimilarInterestsAndSkills(int lecturerId);
     // get friends profile
     Task<FriendProfileDTO> GetFriendProfile(int friendId);
+
+    // get messages
+    Task<IEnumerable<ChatMessage>> GetMessages(string senderId, string receiverId);
 }
