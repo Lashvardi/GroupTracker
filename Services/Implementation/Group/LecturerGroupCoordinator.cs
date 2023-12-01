@@ -37,6 +37,7 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
 
         List<LectureSession> allSessions = new List<LectureSession>();
         List<GroupLectureSession> allGroupLectureSessions = new List<GroupLectureSession>();
+        List<Weekday> days = completeGroupInput.Session.Days;
 
         int totalSessions = completeGroupInput.Group.SessionsAmount;
         int sessionsPerWeek = completeGroupInput.Group.PerWeek;
@@ -48,16 +49,17 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
         {
             for (int sessionIndex = 0; sessionIndex < sessionsPerWeek ; sessionIndex++)
             {
-                int day = sessionIndex % 2 == 0 ? 0 : 4; // Alternating between day 0 and day 4
+                int dayIndex = sessionIndex % days.Count;
+                Weekday day = days[dayIndex];
 
                 var session = new LectureSession
                 {
                     Auditorium = completeGroupInput.Session.Auditorium,
-                    Day = (Weekday)day, // Use the calculated day
+                    Day = day, // Use the calculated day
                     Time = completeGroupInput.Session.Time,
                     IsOnline = completeGroupInput.Session.IsOnline,
                 };
-                await _lectureSessionService.CreateLectureSession(completeGroupInput.Session, (Weekday)day);
+                await _lectureSessionService.CreateLectureSession(completeGroupInput.Session, day);
                 allSessions.Add(session);
 
                 allGroupLectureSessions.Add(new GroupLectureSession
@@ -73,6 +75,7 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
 
 
         newGroup.GroupLectureSessions = allGroupLectureSessions;
+
 
         await _context.LecturerGroups.AddAsync(newGroup);
         await _context.LectureSessions.AddRangeAsync(allSessions);
@@ -162,7 +165,6 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
                 HEX = group.HEX,
                 GroupType = group.GroupType,
                 Auditorium = group.GroupLectureSessions.FirstOrDefault()?.LectureSession.Auditorium,
-
                 SyllabusTopics = group.SyllabusTopics.Select(t => new SyllabusDTO
                 {
                     Id = t.Id,
@@ -212,7 +214,10 @@ public class LecturerGroupCoordinator : ILecturerGroupCoordinator
                 Time = gl.LectureSession.Time,
                 Auditorium = gl.LectureSession.Auditorium,
                 IsOnline = gl.LectureSession.IsOnline,
-            }).ToList()
+                // take only the first 2 days
+                // Probably should be done in the frontend
+                // pagination will be needed
+            }).ToList(),
         }).ToList();
 
         return groupDetailsList;

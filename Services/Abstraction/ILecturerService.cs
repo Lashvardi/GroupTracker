@@ -34,4 +34,7 @@ public interface ILecturerService
     // has filled out socials
     Task<bool> HasFilledOutSocialsAsync(int lecturerId);
 
+    // Delete Lecturer
+    Task DeleteLecturerAsync(int lecturerId);
+
 }

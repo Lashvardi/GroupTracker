@@ -18,7 +18,6 @@ public class GroupWithSyllabusDTO
     public string GroupType { get; set; }
     public string Auditorium { get; set; }
 
-
     // Flags For Icons in frontend
     public bool HasSyllabus { get; set; } // just check the length of the syllabus topics
     public bool IsOnline { get; set; }

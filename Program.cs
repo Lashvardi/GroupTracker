@@ -8,14 +8,16 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
+    options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.AllowAnyOrigin();
-            builder.AllowAnyHeader();
-            builder.AllowAnyMethod();
+            builder.WithOrigins("http://localhost:4200") // Angular app's URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials(); // Allow credentials
         });
 });
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -33,19 +35,28 @@ ServiceConfiguration.ConfigureServices(builder.Services, builder.Configuration);
 var app = builder.Build();
 app.Services.GetRequiredService<IOptions<AppSettings>>();
 
-// Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-               Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+           Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
     RequestPath = "/Images"
 });
-app.MapControllers();
+
+app.UseRouting(); // UseRouting comes first after static files and HTTPS redirection
+
+app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication(); // Only if you have authentication
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints => // UseEndpoints comes after UseRouting and authentication/authorization
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<ChatHub>("/chatHub");
+});
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.Run();

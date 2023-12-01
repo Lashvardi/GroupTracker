@@ -9,7 +9,7 @@ public class LectureSession
 
 
     public Weekday Day { get; set; }
-    public string Time { get; set; }
+    public string Time { get; set; }    
 
     public string Auditorium { get; set; }
     public bool IsOnline { get; set; } = false;

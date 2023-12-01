@@ -7,6 +7,7 @@ using GroupTracker.Services.Abstraction.ImageUpload;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SMTP.Authorization.EmailVerification;
 
 namespace GroupTracker.Services.Implementation;
@@ -444,11 +445,24 @@ public class LecturerService : ILecturerService
     {
         var lecturer = _context.Lecturers.FirstOrDefault(x => x.Id == lecturerId) ?? throw new Exception("Lecturer Is Not Registered");
 
-        if (lecturer.FacebookLink == null && lecturer.TwitterLink == null && lecturer.InstagramLink == null && lecturer.LinkedInLink == null && lecturer.YouTubeLink == null && lecturer.PersonalWebsiteLink == null)
+        if (lecturer.FacebookLink.IsNullOrEmpty() && lecturer.TwitterLink.IsNullOrEmpty() && lecturer.InstagramLink.IsNullOrEmpty() && lecturer.LinkedInLink.IsNullOrEmpty() && lecturer.YouTubeLink.IsNullOrEmpty() && lecturer.PersonalWebsiteLink.IsNullOrEmpty())
         {
             return Task.FromResult(false);
         }
 
         return Task.FromResult(true);
+    }
+
+    public async Task DeleteLecturerAsync(int lecturerId)
+    {
+        var lecturer = await _context.Lecturers.FirstOrDefaultAsync(x => x.Id == lecturerId);
+
+        if (lecturer == null)
+        {
+            throw new Exception("Lecturer Is Not Registered");
+        }
+
+        _context.Lecturers.Remove(lecturer);
+        await _context.SaveChangesAsync();
     }
 }

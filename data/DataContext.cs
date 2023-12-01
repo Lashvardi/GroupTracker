@@ -15,7 +15,7 @@ public class DataContext : DbContext
     public DbSet<LectureSession> LectureSessions { get; set; }
     public DbSet<GroupLectureSession> GroupLectureSessions { get; set; }
     public DbSet<SyllabusTopic> SyllabusTopics { get; set; }
-
+    public DbSet<ChatMessage> ChatMessages { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

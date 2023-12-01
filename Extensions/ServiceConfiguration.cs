@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using SMTP.Authorization.EmailVerification;
 using GroupTracker.Services.Abstraction.ImageUpload;
 using GroupTracker.Services.Implementation.ImageUpload;
+using GroupTracker.Services.Abstraction.Friends;
+using GroupTracker.Services.Implementation.Friends;
+using GroupTracker.Services.Implementation.Chat;
 
 namespace GroupTracker.Extensions
 {
@@ -20,6 +23,9 @@ namespace GroupTracker.Extensions
         public static void ConfigureServices(IServiceCollection services, IConfiguration Configuration)
         {
             // Register services here
+            services.AddSignalR();
+            services.AddScoped<ChatService>();
+            services.AddScoped<ChatHub>();
             services.AddScoped<Microsoft.AspNetCore.Identity.PasswordHasher<LecturerRegistrationInput>>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILecturerService, LecturerService>();
@@ -30,6 +36,7 @@ namespace GroupTracker.Extensions
             services.AddScoped<IFileStorageService, FileStorageService>();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddScoped<IImageUploadService, ImageUploadService>();
+            services.AddScoped<IFriendsService, FriendService>();
             services.AddScoped<EmailVerification>();
 
         }

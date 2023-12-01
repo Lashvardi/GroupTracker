@@ -226,8 +226,19 @@ namespace GroupTracker.Controllers
             }
         }
 
-
-
+        [HttpDelete("delete-lecturer/{lecturerId}")]
+        public async Task<IActionResult> DeleteLecturer(int lecturerId)
+        {
+            try
+            {
+                await _lecturerService.DeleteLecturerAsync(lecturerId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
 
     }
 }
