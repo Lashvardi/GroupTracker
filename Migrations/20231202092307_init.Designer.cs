@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupTracker.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231120104732_init")]
+    [Migration("20231202092307_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -46,6 +46,31 @@ namespace GroupTracker.Migrations
                     b.HasIndex("LectureSessionId");
 
                     b.ToTable("GroupLectureSessions");
+                });
+
+            modelBuilder.Entity("GroupTracker.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("GroupTracker.Models.FileAttachment", b =>
@@ -111,7 +136,16 @@ namespace GroupTracker.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FacebookLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InstagramLink")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVerified")
@@ -120,14 +154,29 @@ namespace GroupTracker.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LinkedInLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalWebsiteLink")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Subjects")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TwitterLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VerificationCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YouTubeLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("bannerImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -161,6 +210,12 @@ namespace GroupTracker.Migrations
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GroupType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HEX")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsOnline")
                         .HasColumnType("bit");
 
@@ -171,9 +226,6 @@ namespace GroupTracker.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("SessionsAmount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SessionsFilled")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")

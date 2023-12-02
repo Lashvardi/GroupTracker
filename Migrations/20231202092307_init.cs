@@ -12,6 +12,22 @@ namespace GroupTracker.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReceiverId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Lecturers",
                 columns: table => new
                 {
@@ -24,7 +40,15 @@ namespace GroupTracker.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false),
-                    VerificationCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    VerificationCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    bannerImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacebookLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TwitterLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InstagramLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkedInLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    YouTubeLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonalWebsiteLink = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,11 +116,12 @@ namespace GroupTracker.Migrations
                     GroupName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Grade = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    HEX = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GroupType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CurrentSession = table.Column<int>(type: "int", nullable: false),
                     SessionsAmount = table.Column<int>(type: "int", nullable: false),
                     IsOnline = table.Column<bool>(type: "bit", nullable: false),
                     PerWeek = table.Column<int>(type: "int", nullable: false),
-                    SessionsFilled = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CurrentSyllabusTopicId = table.Column<int>(type: "int", nullable: true),
@@ -196,6 +221,9 @@ namespace GroupTracker.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_LecturerGroups_SyllabusTopics_CurrentSyllabusTopicId",
                 table: "LecturerGroups");
+
+            migrationBuilder.DropTable(
+                name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "FileAttachment");

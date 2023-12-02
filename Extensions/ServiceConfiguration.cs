@@ -15,6 +15,8 @@ using GroupTracker.Services.Implementation.ImageUpload;
 using GroupTracker.Services.Abstraction.Friends;
 using GroupTracker.Services.Implementation.Friends;
 using GroupTracker.Services.Implementation.Chat;
+using GroupTracker.Services;
+using GroupTracker.SMTP.Notification;
 
 namespace GroupTracker.Extensions
 {
@@ -38,6 +40,10 @@ namespace GroupTracker.Extensions
             services.AddScoped<IImageUploadService, ImageUploadService>();
             services.AddScoped<IFriendsService, FriendService>();
             services.AddScoped<EmailVerification>();
+            services.AddScoped<LectureScheduleService>();
+            services.AddScoped<TodaysLectures>();
+            services.AddScoped<TodaysLecturesSMS>();
+            services.AddHostedService<LectureNotificationService>();
 
         }
     }

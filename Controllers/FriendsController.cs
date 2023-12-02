@@ -1,4 +1,5 @@
 ﻿using GroupTracker.Services.Abstraction.Friends;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroupTracker.Controllers
@@ -13,7 +14,6 @@ namespace GroupTracker.Controllers
         {
             _friendsService = friendsService;
         }
-
 
         [HttpGet("get-other-lecturers-with-similar-interests-and-skills/{lecturerId}")]
         public async Task<IActionResult> GetOtherLecturersWithSimilarInterestsAndSkills(int lecturerId)

@@ -4,6 +4,9 @@ using GroupTracker.Extensions;
 using GroupTracker.ENV;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -22,7 +25,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
-        options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=TrackerProd;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
+        options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=TrackerPresentation;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -30,7 +33,18 @@ builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 ServiceConfiguration.ConfigureServices(builder.Services, builder.Configuration);
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 var app = builder.Build();
 app.Services.GetRequiredService<IOptions<AppSettings>>();
@@ -47,7 +61,7 @@ app.UseRouting(); // UseRouting comes first after static files and HTTPS redirec
 
 app.UseCors("AllowSpecificOrigin");
 
-app.UseAuthentication(); // Only if you have authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints => // UseEndpoints comes after UseRouting and authentication/authorization
